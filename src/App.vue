@@ -1,7 +1,8 @@
 <template>
   <div id="preappCalc" class="container">
     <!-- if preappChoices v-model is false, then show it -->
-    <div id="preappDetails" v-if="!preappChoices">
+    <!-- <div id="preappDetails" v-if="!preappChoices"> -->
+    <div id="preappDetails">
       <h1>Your Details</h1>
       <hr>
       <h2>Set your retirement timeframe</h2>
@@ -118,27 +119,39 @@
         </ul> 
       </div>
 
-      <Chart  :labels="[39, 45 , 55, 60, 65, 70]" 
-              :values="[5, 10, 20, 30, 40, 50, 60]" 
+      <Chart  :agePotValue="agePotValue"
+              :xAxisTitle="['Age']"
+              :yAxisTitle="['Pot Value']"
               :chartType="['area']"
               :chartTitle="['']">
               </Chart>
     
-      <button type="button" class="btn btn-primary" @click="togglePreappInfo">{{ editPreappInfo ? hidePreappInfoText : editPreappInfoText }}</button>
+      <button type="button" 
+              class="btn btn-primary" 
+              @click="togglePreappInfo">{{ editPreappInfo ? hidePreappInfoText : editPreappInfoText }}</button>
 
       <div class="card" v-if="editPreappInfo">
         <ul class="list-group  list-group-flush">
           <li class="list-group-item form-group">
             <label>Planned retirement age</label>
-            <input class="form-control" type="number" name="retirementAge" v-model="retirementAge">
+            <input class="form-control" 
+                    type="number" 
+                    name="retirementAge" 
+                    v-model="retirementAge">
           </li>
           <li class="list-group-item form-group">
             <label>One-off contribution</label>
-            <input class="form-control" type="number" name="oneOffContrib" v-model="oneOffContrib">
+            <input class="form-control" 
+                    type="number" 
+                    name="oneOffContrib" 
+                    v-model="oneOffContrib">
           </li>
           <li class="list-group-item form-group">
             <label>Regular contribution</label>
-            <input class="form-control" type="number" name="regularContrib" v-model="regularContrib">
+            <input class="form-control" 
+                    type="number" 
+                    name="regularContrib" 
+                    v-model="regularContrib">
           </li>
         </ul>
       </div>
@@ -160,17 +173,17 @@ export default {
   components: { Chart },
   data () {
     return {
-      age: '',
-      retirementAge: 55,
-      currentPensionsValue: '',
+      age: null,
+      retirementAge: null,
+      currentPensionsValue: null,
       payingInto: false,
-      oneOffContrib: '',
+      oneOffContrib: null,
       statePension: null,
       preappChoices: false,
       editPreappInfo: false,
       editPreappInfoText: 'Edit info',
       hidePreappInfoText: 'Hide info',
-      employerAmount: '',
+      employerAmount: null,
       employerContrib: null,
       percentages: [
         { percent: 3 },
@@ -180,8 +193,11 @@ export default {
     }
   },
   computed: {
-    potValue: function() {
-      return this.currentPensionsValue * this.oneOffContrib;
+    agePotValue: function() {
+      var vm = this;
+      var agePotValue = [[vm.age, (vm.currentPensionsValue * 40)], [vm.retirementAge, vm.currentPensionsValue]];
+
+      return agePotValue;
     }
   },
   methods: {

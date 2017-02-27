@@ -1,6 +1,6 @@
 <template>
 	
-	<div id="Chart" style="height: 300px"></div>
+	<div style="height: 300px"></div>
 
 </template>
 
@@ -9,43 +9,46 @@ import Highcharts from 'highcharts'
 
 export default {
 	name: 'Chart',
-	props: ['chartType', 'chartTitle', 'labels', 'values'],
+	props: ['chartType', 'chartTitle', 'yAxisTitle', 'xAxisTitle', 'agePotValue'],
 	mounted () {
 		var highchartsOptions = {
-    		chart: {
-		    	type: this.chartType
-		  	},
-		  	title: {
-		    	text: this.chartTitle
-		  	},
-		  	xAxis: {
-		  		allowDecimals: false,
-		  		title: {
-		  			text: 'Age'
-		  		},
-		  		labels: {
-						formatter: function () {
-							return this.labels;
-						}
-          }
-		  	},
-		  	yAxis: {
-		  		title: {
-		  			text: 'Pot Value'
-		  		},
-		  		labels: {
-            formatter: function () {
-                return this.value + 'k';
-            }
-          },
-		    	opposite: true
-		  	},
-			  series: [{
-			    name: 'Pot Value',
-			      data: this.values
-			  }]
-    }
-		Highcharts.chart('Chart', highchartsOptions)
+			chart: {
+				type: 'area'
+			},
+			credits: {
+				enabled: false
+			},
+			tooltip: {
+				enabled: false
+			},
+			title: {
+				text: ''
+			},
+			xAxis: {
+				allowDecimals: false,
+				title: {
+					text: 'Age'
+				}
+			},
+			yAxis: {
+				title: {
+				  text: 'Pot Value'
+				},
+				labels: {
+					formatter: function () {
+				    return '£' + this.value / 1000 + 'k';
+				  }
+				},
+				opposite: true,
+			},
+			plotOptions: {},
+			series: [{
+				name: 'Pot Value at Age',
+				data: this.agePotValue
+			}],
+			credits: false
+    	}
+		Highcharts.chart(this.$el, highchartsOptions)
 	},
 }
 </script>
